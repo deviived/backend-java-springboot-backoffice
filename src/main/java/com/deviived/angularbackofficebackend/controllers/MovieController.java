@@ -1,19 +1,24 @@
 package com.deviived.angularbackofficebackend.controllers;
 
 import com.deviived.angularbackofficebackend.model.dto.MovieDTO;
+import com.deviived.angularbackofficebackend.services.MovieService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController("/api/movies")
+@RestController
+@RequestMapping("/api/movies")
 public class MovieController {
+    @Autowired
+    private MovieService movieService;
 
-    @GetMapping("/")
-    public List<MovieDTO> index() {
-        return new ArrayList<>();
-        /*return "Greetings from Spring Boot! Yeah!";*/
+    @GetMapping({"", "/"})
+    public List<MovieDTO> getMovies() {
+        return this.movieService.findAll();
     }
 
 }
