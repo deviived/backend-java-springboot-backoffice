@@ -1,6 +1,6 @@
 package com.deviived.angularbackofficebackend.repository;
 
-import com.deviived.angularbackofficebackend.model.entity.Movie;
+import com.deviived.angularbackofficebackend.model.Movie;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 

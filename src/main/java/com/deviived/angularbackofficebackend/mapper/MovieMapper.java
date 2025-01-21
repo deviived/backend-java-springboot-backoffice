@@ -1,7 +1,7 @@
-package com.deviived.angularbackofficebackend.mappers;
+package com.deviived.angularbackofficebackend.mapper;
 
-import com.deviived.angularbackofficebackend.model.dto.MovieDTO;
-import com.deviived.angularbackofficebackend.model.entity.Movie;
+import com.deviived.angularbackofficebackend.dto.MovieDTO;
+import com.deviived.angularbackofficebackend.model.Movie;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -10,4 +10,5 @@ public interface MovieMapper {
     MovieMapper INSTANCE = Mappers.getMapper( MovieMapper.class );
 
     MovieDTO movieToDto(Movie movie);
+    Movie movieToEntity(MovieDTO movie);
 }

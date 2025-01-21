@@ -1,4 +1,4 @@
-package com.deviived.angularbackofficebackend.model.entity;
+package com.deviived.angularbackofficebackend.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.deviived.angularbackofficebackend.model.dto;
+package com.deviived.angularbackofficebackend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.deviived.angularbackofficebackend.config;
+package com.deviived.angularbackofficebackend.common;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

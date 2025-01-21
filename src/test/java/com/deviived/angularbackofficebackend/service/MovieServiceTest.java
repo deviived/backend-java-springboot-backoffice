@@ -1,4 +1,4 @@
-package com.deviived.angularbackofficebackend.services;
+package com.deviived.angularbackofficebackend.service;
 
 import com.deviived.angularbackofficebackend.repository.MovieRepository;
 import jakarta.transaction.Transactional;
@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class MovieServiceTest {
 
     @Autowired
