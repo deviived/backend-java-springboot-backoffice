@@ -7,11 +7,12 @@ public enum MovieGenre {
     ACTION("Action"),
     COMEDY("Comedy"),
     DRAMA("Drama"),
+    FANTASY("Fantasy"),
     HORROR("Horror"),
+    ROMANCE("Romance"),
     SCIENCE_FICTION("Science Fiction"),
     THRILLER("Thriller"),
-    ROMANCE("Romance"),
-    FANTASY("Fantasy");
+    WESTERN("Western");
 
     private final String label;
 
