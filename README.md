@@ -2,6 +2,11 @@
 
 #### Written in Java 21 and Spring Boot 3.4.1 ####
 
+The purpose of this project is to serve UIs backoffices with authentication and some RESTful APIs to create, read, update and delete datas with PostgreSQL database integration.
+
+[Integration with Angular 19 UI Backoffice](https://github.com/deviived/angular-backoffice-ui)  
+[Integration with ReactJS UI Backoffice] // to be implemented
+
 Full setup : Spring MVC, Spring Data and PostgreSQL database, Spring Security with JJWT api (Token JWT used for connection) and OAuth2 with Github SSO (yet to be implemented), Lombok, MapStruct, Junit, Mockito and H2 database for integration testing
 
 ### Auth APIs ###
