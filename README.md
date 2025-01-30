@@ -12,7 +12,9 @@ Full setup : Spring MVC, Spring Data and PostgreSQL database, Spring Security wi
 ### Movies APIs ###
 > Base URL : ***/api/movies***
 >> __GET__ : get all movies  
->> __POST__ : create new movie { MovieDTO }  
+>> __POST__ : create new movie with MovieDTO  
+>>> **MovieDTO {** __title__: String, __genre__: MovieGenre, __director__: String (to be replaced by director ID when table created), __movie_year__: Integer, __rating__: Double **}** 
+>>>> **MovieGenre** : enum (ACTION, COMEDY, DRAMA, FANTASY, HORROR, ROMANCE, SCIENCE_FICTION, THRILLER, WESTERN)
 >
 > ***/api/movies/{genre}*** : __GET__ : get all movies by movie genre passed in path param
 >
