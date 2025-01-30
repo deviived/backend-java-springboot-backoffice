@@ -1,6 +1,8 @@
 package com.deviived.angularbackofficebackend.common.auth.utils;
 
+import com.deviived.angularbackofficebackend.common.exceptions.ExpiredTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -81,12 +83,16 @@ public class JwtTokenProvider {
      */
     private Claims extractAllClaims(String token) {
         try {
-                return Jwts.parserBuilder()
-                    .setSigningKey(jwtSecretKey) // Uses the properly configured SecretKey
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
+            return Jwts.parserBuilder()
+                .setSigningKey(jwtSecretKey) // Uses the properly configured SecretKey
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        }
+        catch(ExpiredJwtException e) {
+            throw new ExpiredTokenException(e.getMessage());
+        }
+        catch (Exception e) {
             throw new RuntimeException("Invalid or expired token", e);
         }
     }
