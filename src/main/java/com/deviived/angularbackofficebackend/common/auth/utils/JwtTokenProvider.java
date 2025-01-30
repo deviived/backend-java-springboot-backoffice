@@ -1,43 +1,93 @@
 package com.deviived.angularbackofficebackend.common.auth.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwsHeader;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import javax.crypto.SecretKey;
+import java.util.Date;
+import java.util.function.Function;
 
 @Component
 public class JwtTokenProvider {
 
-    @Autowired
-    private JwtEncoder jwtEncoder;
+    private final SecretKey jwtSecretKey;
+    private final long jwtExpiration;
 
-    public String generateToken(Authentication authentication) {
-        Instant now = Instant.now();
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.DAYS))
-                .subject(authentication.getName())
-                .build();
-        JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims);
-        return this.jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+    public JwtTokenProvider(
+            @Value("${jwt.secret}") String jwtSecret,
+            @Value("${jwt.expiration}") long jwtExpiration
+    ) {
+        this.jwtSecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+        this.jwtExpiration = jwtExpiration;
     }
 
-//    public String generateToken(Authentication authentication) {
-//        User user = (User) authentication.getPrincipal();
-//
-//        return Jwts.builder()
-//                .setSubject(user.getUsername())
-//                .setIssuedAt(new Date())
-//                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-//                .signWith(org.springframework.security.oauth2.jose.jws.SignatureAlgorithm.HS512, jwtSecret)
-//                .compact();
-//    }
+    /**
+     * Extracts username (subject) from the token.
+     */
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    /**
+     * Extracts a specific claim from the token.
+     */
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    /**
+     * Generates a JWT token for the authenticated user.
+     */
+    public String generateToken(Authentication authentication) {
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(jwtSecretKey, SignatureAlgorithm.HS256) // Uses the secret key for signing
+                .compact();
+    }
+
+    /**
+     * Validates the token by checking username and expiration.
+     */
+    public boolean isTokenValid(String token, String username) {
+        final String extractedUsername = extractUsername(token);
+        return (extractedUsername.equals(username) && !isTokenExpired(token));
+    }
+
+    /**
+     * Checks if the token is expired.
+     */
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    /**
+     * Extracts the expiration date from the token.
+     */
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    /**
+     * Extracts all claims from the token.
+     */
+    private Claims extractAllClaims(String token) {
+        try {
+                return Jwts.parserBuilder()
+                    .setSigningKey(jwtSecretKey) // Uses the properly configured SecretKey
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid or expired token", e);
+        }
+    }
 }

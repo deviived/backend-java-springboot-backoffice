@@ -1,38 +1,69 @@
 package com.deviived.angularbackofficebackend.common.config;
 
+import com.deviived.angularbackofficebackend.common.auth.utils.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*");
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
+        configuration.setAllowCredentials(false);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for simplicity
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(AbstractHttpConfigurer::disable) // Explicitly disable CSRF
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/auth/login", "/api/auth/oauth2/**").permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers("/auth/login", "/auth/register", "/oauth2/**").permitAll()
+                    .requestMatchers("/api/**").authenticated()
+//                    .anyRequest().authenticated()
             )
-            .formLogin(form -> form
-                    .loginProcessingUrl("/api/auth/login") // Custom login endpoint
-                    .successHandler((request, response, authentication) -> response.setStatus(200)) // Handle successful login
-                    .failureHandler((request, response, exception) -> response.setStatus(401)) // Handle login failure
-            )
-            .oauth2Login(oauth2 -> oauth2
-                    .loginPage("/api/auth/oauth2/authorization/github") // GitHub OAuth2 login endpoint
-                    .defaultSuccessUrl("/api/auth/success", true) // Redirect on success
-                    .failureUrl("/api/auth/failure") // Redirect on failure
+//            .oauth2Login(oauth -> oauth
+//                    .loginPage("/oauth2/login")
+//                    .defaultSuccessUrl("/home", true)
+//            )
+//            .formLogin(form -> form
+//                    .loginPage("/auth/login")
+//                    .permitAll()
+//            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
+            .logout(logout -> logout
+                    .logoutSuccessUrl("/auth/login")
             );
-
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
