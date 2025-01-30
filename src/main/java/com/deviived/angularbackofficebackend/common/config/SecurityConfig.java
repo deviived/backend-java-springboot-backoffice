@@ -42,22 +42,10 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable) // Explicitly disable CSRF
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth/login", "/auth/register", "/oauth2/**").permitAll()
+                    .requestMatchers("/auth/logout", "/auth/login", "/auth/register", "/oauth2/**").permitAll()
                     .requestMatchers("/api/**").authenticated()
-//                    .anyRequest().authenticated()
             )
-//            .oauth2Login(oauth -> oauth
-//                    .loginPage("/oauth2/login")
-//                    .defaultSuccessUrl("/home", true)
-//            )
-//            .formLogin(form -> form
-//                    .loginPage("/auth/login")
-//                    .permitAll()
-//            )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
-            .logout(logout -> logout
-                    .logoutSuccessUrl("/auth/login")
-            );
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
         return http.build();
     }
 
