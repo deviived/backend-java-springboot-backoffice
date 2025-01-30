@@ -1,4 +1,4 @@
-# Backoffice web JAVA #
+# Backend web JAVA for Backoffice #
 
 #### Written in Java 21 and Spring Boot 3.4.1 ####
 
