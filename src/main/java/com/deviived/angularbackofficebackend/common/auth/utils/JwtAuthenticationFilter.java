@@ -1,5 +1,6 @@
 package com.deviived.angularbackofficebackend.common.auth.utils;
 
+import com.deviived.angularbackofficebackend.common.exceptions.ExpiredTokenException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,10 +53,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        decodeJwtParts(token);
-        authenticateUser(token);
-
-        filterChain.doFilter(request, response);
+        try {
+            decodeJwtParts(token);
+            authenticateUser(token);
+            filterChain.doFilter(request, response);  // ✅ Only execute filter chain if no exception occurs
+        } catch (ExpiredTokenException e) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token is expired\"}");
+            response.getWriter().flush(); // ✅ Ensure response is written immediately
+            return; // ✅ Stop execution after handling the exception
+        }
     }
 
     /**

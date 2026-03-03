@@ -3,11 +3,12 @@ package com.deviived.angularbackofficebackend.controller;
 import com.deviived.angularbackofficebackend.dto.MovieDTO;
 import com.deviived.angularbackofficebackend.enums.MovieGenre;
 import com.deviived.angularbackofficebackend.service.MovieService;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
@@ -33,10 +34,12 @@ public class MovieController {
     }
 
     @GetMapping("/genres")
-    public List<Pair<String, String>> getAllGenres() {
+    public Map<String, String> getAllGenres() {
         return Stream.of(MovieGenre.values())
-                .map(genre -> new Pair<>(genre.name(), genre.getLabel()))
-                .toList();
+                .collect(Collectors.toMap(
+                        MovieGenre::name,
+                        MovieGenre::getLabel
+                ));
     }
 
     @GetMapping("/exception")

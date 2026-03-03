@@ -28,7 +28,7 @@ public class MovieControllerTest {
     @Test
     public void testGetMovies() throws Exception {
         var list = new ArrayList<MovieDTO>();
-        list.add(MovieDTO.builder().id(1L).name("Interstellar")
+        list.add(MovieDTO.builder().id(1L).title("Interstellar")
                 .director("Christopher Nolan")
                 .movieYear(2014)
                 .rating(5d).build());

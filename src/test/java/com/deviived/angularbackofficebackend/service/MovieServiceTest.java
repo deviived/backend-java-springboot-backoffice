@@ -28,14 +28,14 @@ public class MovieServiceTest {
 
     @Test
     @Transactional
-    @Sql(statements = "INSERT INTO movie (id, name, director, movie_year, rating) VALUES (1, 'Interstellar', 'Christopher Nolan', 2014, 4.9)",
+    @Sql(statements = "INSERT INTO movie (id, title, director, movie_year, rating) VALUES (1, 'Interstellar', 'Christopher Nolan', 2014, 4.9)",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     public void testGetMovies() {
         var movies = this.movieService.findAll();
         Assertions.assertNotNull(movies);
         Assertions.assertFalse(movies.isEmpty());
         Assertions.assertEquals(2014, movies.getFirst().getMovieYear());
-        Assertions.assertEquals("Interstellar", movies.getFirst().getName());
+        Assertions.assertEquals("Interstellar", movies.getFirst().getTitle());
         Assertions.assertEquals("Christopher Nolan", movies.getFirst().getDirector());
         Assertions.assertEquals(4.9, movies.getFirst().getRating());
     }
