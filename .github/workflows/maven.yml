@@ -46,6 +46,9 @@ jobs:
             sleep 2
           done
 
+      - name: Maven spotless:check
+        run: mvn spotless:check
+
       - name: Build with Maven (unit + integration tests)
         env:
           # Variables pour PostgreSQL (tests d’intégration)
