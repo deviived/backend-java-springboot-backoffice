@@ -5,17 +5,17 @@ import com.deviived.angularbackofficebackend.mapper.MovieMapper;
 import com.deviived.angularbackofficebackend.dto.MovieDTO;
 import com.deviived.angularbackofficebackend.repository.MovieRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MovieService {
 
-    @Autowired
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     @Transactional
     public List<MovieDTO> findAll() {

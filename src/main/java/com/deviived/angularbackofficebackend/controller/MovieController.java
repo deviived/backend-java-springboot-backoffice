@@ -3,7 +3,9 @@ package com.deviived.angularbackofficebackend.controller;
 import com.deviived.angularbackofficebackend.dto.MovieDTO;
 import com.deviived.angularbackofficebackend.enums.MovieGenre;
 import com.deviived.angularbackofficebackend.service.MovieService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,10 +14,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping("/api/movies")
+@RequestMapping(value = "/api/movies", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class MovieController {
-    @Autowired
-    private MovieService movieService;
+
+    private final MovieService movieService;
 
     @GetMapping({"", "/"})
     public List<MovieDTO> getMovies() {
