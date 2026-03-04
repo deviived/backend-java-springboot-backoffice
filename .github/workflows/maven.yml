@@ -51,13 +51,8 @@ jobs:
 
       - name: Build with Maven (unit + integration tests)
         env:
-          # Variables pour PostgreSQL (tests d’intégration)
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
-          SPRING_DATASOURCE_USERNAME: testuser
-          SPRING_DATASOURCE_PASSWORD: testpassword
-
           # Exemple pour H2 (tests unitaires)
-          H2_DATASOURCE_URL: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+          H2_DATASOURCE_URL: jdbc:h2:mem:public;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
           H2_DATASOURCE_USERNAME: sa
           H2_DATASOURCE_PASSWORD: ""
 
