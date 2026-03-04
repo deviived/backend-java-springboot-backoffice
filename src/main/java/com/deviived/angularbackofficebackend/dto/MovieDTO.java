@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MovieDTO {
-    private Long id;
-    private String title;
-    private String genre;
-    private String director;
-    @JsonProperty("movie_year")
-    private Integer movieYear;
-    private Double rating;
+  private Long id;
+  private String title;
+  private String genre;
+  private String director;
+
+  @JsonProperty("movie_year")
+  private Integer movieYear;
+
+  private Double rating;
 }

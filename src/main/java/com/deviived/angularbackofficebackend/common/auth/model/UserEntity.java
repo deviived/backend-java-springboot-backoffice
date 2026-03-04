@@ -8,22 +8,22 @@ import lombok.Data;
 @Table(name = "users")
 public class UserEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+  @Column(unique = true, nullable = false)
+  private String email;
 
-    @Column(nullable = false)
-    private String password;
+  @Column(nullable = false)
+  private String password;
 
-    @Column(name = "provider")
-    private String provider; // e.g., "local" or "github"
+  @Column(name = "provider")
+  private String provider; // e.g., "local" or "github"
 
-    @Column(name = "name")
-    private String name;
+  @Column(name = "name")
+  private String name;
 
-    @Column(name = "role")
-    private String role; // e.g., "ROLE_USER", "ROLE_ADMIN"
+  @Column(name = "role")
+  private String role; // e.g., "ROLE_USER", "ROLE_ADMIN"
 }

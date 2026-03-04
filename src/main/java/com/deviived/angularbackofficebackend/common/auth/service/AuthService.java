@@ -3,45 +3,40 @@ package com.deviived.angularbackofficebackend.common.auth.service;
 import com.deviived.angularbackofficebackend.common.auth.model.UserEntity;
 import com.deviived.angularbackofficebackend.common.auth.repository.UserRepository;
 import com.deviived.angularbackofficebackend.common.auth.utils.JwtTokenProvider;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+  private final AuthenticationManager authenticationManager;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtTokenProvider jwtTokenProvider;
 
-    public String login(String email, String password) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
-        return jwtTokenProvider.generateToken(authentication);
+  public String login(String email, String password) {
+    Authentication authentication =
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(email, password));
+    return jwtTokenProvider.generateToken(authentication);
+  }
+
+  public UserEntity register(String email, String password) {
+    if (userRepository.findByEmail(email).isPresent()) {
+      throw new IllegalArgumentException("User already exists");
     }
 
-    public UserEntity register(String email, String password) {
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("User already exists");
-        }
+    UserEntity user = new UserEntity();
+    user.setEmail(email);
+    user.setPassword(passwordEncoder.encode(password));
+    user.setProvider("local");
+    user.setRole("ROLE_USER");
 
-        UserEntity user = new UserEntity();
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setProvider("local");
-        user.setRole("ROLE_USER");
-
-        return userRepository.save(user);
-    }
+    return userRepository.save(user);
+  }
 }

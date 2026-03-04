@@ -13,31 +13,30 @@ import org.springframework.test.context.jdbc.Sql;
 @ActiveProfiles("test")
 public class MovieServiceTest {
 
-    @Autowired
-    private MovieRepository movieRepository;
+  @Autowired private MovieRepository movieRepository;
 
-    @Autowired
-    private MovieService movieService;
+  @Autowired private MovieService movieService;
 
-    @Test
-    public void testGetEmptyMovies() {
-        var movies = this.movieService.findAll();
-        Assertions.assertNotNull(movies);
-        Assertions.assertTrue(movies.isEmpty());
-    }
+  @Test
+  public void testGetEmptyMovies() {
+    var movies = this.movieService.findAll();
+    Assertions.assertNotNull(movies);
+    Assertions.assertTrue(movies.isEmpty());
+  }
 
-    @Test
-    @Transactional
-    @Sql(statements = "INSERT INTO movie (id, title, director, movie_year, rating) VALUES (1, 'Interstellar', 'Christopher Nolan', 2014, 4.9)",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    public void testGetMovies() {
-        var movies = this.movieService.findAll();
-        Assertions.assertNotNull(movies);
-        Assertions.assertFalse(movies.isEmpty());
-        Assertions.assertEquals(2014, movies.getFirst().getMovieYear());
-        Assertions.assertEquals("Interstellar", movies.getFirst().getTitle());
-        Assertions.assertEquals("Christopher Nolan", movies.getFirst().getDirector());
-        Assertions.assertEquals(4.9, movies.getFirst().getRating());
-    }
-
+  @Test
+  @Transactional
+  @Sql(
+      statements =
+          "INSERT INTO movie (id, title, director, movie_year, rating) VALUES (1, 'Interstellar', 'Christopher Nolan', 2014, 4.9)",
+      executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  public void testGetMovies() {
+    var movies = this.movieService.findAll();
+    Assertions.assertNotNull(movies);
+    Assertions.assertFalse(movies.isEmpty());
+    Assertions.assertEquals(2014, movies.getFirst().getMovieYear());
+    Assertions.assertEquals("Interstellar", movies.getFirst().getTitle());
+    Assertions.assertEquals("Christopher Nolan", movies.getFirst().getDirector());
+    Assertions.assertEquals(4.9, movies.getFirst().getRating());
+  }
 }

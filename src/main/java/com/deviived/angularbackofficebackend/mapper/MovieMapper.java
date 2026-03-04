@@ -8,9 +8,10 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface MovieMapper {
-    MovieMapper INSTANCE = Mappers.getMapper( MovieMapper.class );
+  MovieMapper INSTANCE = Mappers.getMapper(MovieMapper.class);
 
-    MovieDTO movieToDto(Movie movie);
-    @Mapping(target = "totalReviews", ignore = true)
-    Movie movieToEntity(MovieDTO movie);
+  MovieDTO movieToDto(Movie movie);
+
+  @Mapping(target = "totalReviews", ignore = true)
+  Movie movieToEntity(MovieDTO movie);
 }

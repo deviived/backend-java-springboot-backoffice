@@ -12,17 +12,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name="movie")
+@Table(name = "movie")
 public class Movie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private String director;
-    @Enumerated(EnumType.STRING)
-    private MovieGenre genre;
-    private Integer movieYear;
-    private Double rating;
-    @Column(name="number_of_reviews", columnDefinition = "integer default 0")
-    private Integer totalReviews;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  private String title;
+  private String director;
+
+  @Enumerated(EnumType.STRING)
+  private MovieGenre genre;
+
+  private Integer movieYear;
+  private Double rating;
+
+  @Column(name = "number_of_reviews", columnDefinition = "integer default 0")
+  private Integer totalReviews;
 }
